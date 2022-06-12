@@ -7,6 +7,11 @@ namespace Chat.Db
 {
     public class ChatDbContext : IdentityDbContext<AppIdentityUser, AppIdentityRole, Guid, IdentityUserClaim<Guid>, AppIdentityUserRole, IdentityUserLogin<Guid>, IdentityRoleClaim<Guid>, IdentityUserToken<Guid>>
     {
+        /// <summary>
+        /// Gets or sets the groups.
+        /// </summary>
+        public virtual DbSet<Group> Groups { get; set; }
+
         public ChatDbContext(DbContextOptions<ChatDbContext> options)
             : base(options)
         {
