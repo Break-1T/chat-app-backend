@@ -12,6 +12,9 @@ using Chat.Db.Models;
 using Chat.Db;
 using Chat.IdentityServer;
 using IdentityServer4;
+using System.Configuration;
+using System.Linq;
+using IdentityServer4.Models;
 
 Log.Logger = new LoggerConfiguration()
     .MinimumLevel.Debug()
@@ -35,19 +38,30 @@ builder.Services.AddIdentity<AppIdentityUser, AppIdentityRole>()
     .AddEntityFrameworkStores<ChatDbContext>()
     .AddDefaultTokenProviders();
 
+var clients = Config.Clients.ToList();
+clients.Add(new Client
+{
+    ClientName = builder.Configuration.GetSection("Client:ClientName").Value,
+    ClientId = builder.Configuration.GetSection("Client:ClientId").Value,
+    ClientSecrets = { new Secret(builder.Configuration.GetSection("Client:ClientSecret").Value.Sha256()) },
+    AllowedGrantTypes = GrantTypes.ResourceOwnerPassword,
+    AllowedScopes = { "Group" },
+    AllowAccessTokensViaBrowser = true,
+});
+
 var identityServerBuilder = builder.Services.AddIdentityServer(options =>
 {
     options.Events.RaiseErrorEvents = true;
     options.Events.RaiseInformationEvents = true;
     options.Events.RaiseFailureEvents = true;
     options.Events.RaiseSuccessEvents = true;
-    options.IssuerUri = builder.Configuration.GetConnectionString("Auth:Identity_Server_Url");
+    options.IssuerUri = builder.Configuration.GetConnectionString("Auth:IdentityServer_Url");
         // see https://identityserver4.readthedocs.io/en/latest/topics/resources.html
     options.EmitStaticAudienceClaim = true;
 })
     .AddInMemoryIdentityResources(Config.IdentityResources)
     .AddInMemoryApiScopes(Config.ApiScopes)
-    .AddInMemoryClients(Config.Clients)
+    .AddInMemoryClients(clients)
     .AddAspNetIdentity<AppIdentityUser>();
 
 // not recommended for production - you need to store your key material somewhere secure

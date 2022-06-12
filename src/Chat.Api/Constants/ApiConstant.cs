@@ -9,6 +9,8 @@
             public const string UserIdClaimType = "UserId";
             
             public const string GroupIdClaimType = "GroupId";
+
+            public const string UserId = "sub";
         }
     }
 }

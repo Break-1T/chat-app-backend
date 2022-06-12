@@ -7,10 +7,19 @@ using Chat.Db.Extensions;
 using Chat.Db.Models;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.IdentityModel.Tokens;
+using Microsoft.OpenApi.Models;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
+builder.Services.Configure<CookiePolicyOptions>(options =>
+{
+    // This lambda determines whether user consent for non-essential cookies is needed for a given request.
+    options.CheckConsentNeeded = context => true;
+    options.MinimumSameSitePolicy = SameSiteMode.None;
+});
+
 builder.Services.AddRazorPages();
 
 builder.Services.AddAutoMapper(typeof(MappingProfile));
@@ -51,11 +60,37 @@ builder.Services.AddRazorPages();
 
 //builder.Services.AddEndpointsApiExplorer();
 
+builder.Services.AddAuthentication("Bearer")
+    .AddJwtBearer("Bearer", options =>
+    {
+        Console.WriteLine(builder.Configuration.GetSection("Auth:IdentityServer_Url").Value);
+        options.Authority = builder.Configuration.GetSection("Auth:IdentityServer_Url").Value;
+        options.RequireHttpsMetadata = false;
+        options.IncludeErrorDetails = true;
+        options.TokenValidationParameters = new TokenValidationParameters
+        {
+            ValidateAudience = false,
+        };
+   });
+
 builder.Services.AddSignalR();
-builder.Services.AddSwaggerGen();
 
 builder.Services.AddControllersWithViews();
 builder.Services.AddControllers();
+
+builder.Services.AddSwaggerGen(options => 
+{
+    options.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
+    {
+        Description = @"JWT Authorization header using the Bearer scheme. \r\n\r\n 
+                      Enter 'Bearer' [space] and then your token in the text input below.
+                      \r\n\r\nExample: 'Bearer 12345abcdef'",
+        Name = "Authorization",
+        In = ParameterLocation.Header,
+        Type = SecuritySchemeType.Http,
+        Scheme = "Bearer"
+    });
+});
 
 var app = builder.Build();
 

@@ -13,8 +13,9 @@ namespace Chat.Api.Controllers
     /// </summary>
     /// <seealso cref="Microsoft.AspNetCore.Mvc.Controller" />
     [ApiController]
+    [Route("[controller]")]
     [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
-    public class GroupController : Controller
+    public class GroupController : ControllerBase
     {
         private readonly IGroupService _groupService;
 

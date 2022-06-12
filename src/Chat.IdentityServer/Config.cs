@@ -4,23 +4,25 @@
 
 using IdentityServer4.Models;
 using System.Collections.Generic;
+using Microsoft.Extensions.Configuration;
 
 namespace Chat.IdentityServer
 {
     public static class Config
     {
         public static IEnumerable<IdentityResource> IdentityResources =>
-                   new IdentityResource[]
-                   {
-                        new IdentityResources.OpenId(),
-                        new IdentityResources.Profile(),
-                   };
+            new IdentityResource[]
+            {
+                new IdentityResources.OpenId(),
+                new IdentityResources.Profile(),
+            };
 
         public static IEnumerable<ApiScope> ApiScopes =>
             new ApiScope[]
             {
                 new ApiScope("scope1"),
                 new ApiScope("scope2"),
+                new ApiScope("Group"),
             };
 
         public static IEnumerable<Client> Clients =>
@@ -53,6 +55,7 @@ namespace Chat.IdentityServer
                     AllowOfflineAccess = true,
                     AllowedScopes = { "openid", "profile", "scope2" }
                 },
+                
             };
     }
 }

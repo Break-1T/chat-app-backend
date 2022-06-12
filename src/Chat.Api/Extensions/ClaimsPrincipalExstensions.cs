@@ -18,8 +18,8 @@ namespace Chat.Api.Extensions
                 throw new ArgumentNullException(nameof(claimsPrincipal));
             }
 
-            var value = claimsPrincipal.GetClaimValue(ApiConstant.ApiClaims.UserIdClaimType);
-
+            //var value = claimsPrincipal.GetClaimValue(ApiConstant.ApiClaims.UserId);
+            var value = claimsPrincipal.GetClaimValue("http://schemas.xmlsoap.org/ws/2005/05/identity/claims/nameidentifier");
             return Guid.Parse(value);
         }
 
@@ -60,6 +60,8 @@ namespace Chat.Api.Extensions
             {
                 throw new ArgumentException($"Value is null or empty. ", nameof(claimName));
             }
+
+            var cl = claimsPrincipal.Claims.FirstOrDefault(cl => cl.Type.Equals(claimName, StringComparison.InvariantCultureIgnoreCase));
 
             return claimsPrincipal.Claims.FirstOrDefault(cl => cl.Type.Equals(claimName, StringComparison.InvariantCultureIgnoreCase))?.Value;
         }
