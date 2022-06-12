@@ -1,7 +1,12 @@
+using Chat.Db.Extensions;
+
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 builder.Services.AddRazorPages();
+
+var postgresConnectionString = builder.Configuration.GetConnectionString("PostgresConnection");
+builder.Services.AddDbServices(postgresConnectionString);
 
 var app = builder.Build();
 
