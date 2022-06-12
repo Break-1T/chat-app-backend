@@ -1,7 +1,9 @@
 ﻿using Chat.Db.Interfaces;
 using Chat.Db.Models;
+using Chat.Db.ResultModels;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
+using Chat.Db.Constants;
 
 namespace Chat.Db.Stores
 {
@@ -17,7 +19,7 @@ namespace Chat.Db.Stores
         }
 
         /// <inheritdoc/>
-        public async Task<Group> AddGroupAsync(Group group, CancellationToken cancellationToken = default)
+        public async Task<DbOperationResult<Group>> AddGroupAsync(Group group, CancellationToken cancellationToken = default)
         {
             if (group == null)
             {
@@ -29,18 +31,20 @@ namespace Chat.Db.Stores
                 this._dbContext.Groups.Add(group);
                 var result = await this._dbContext.SaveChangesAsync(cancellationToken);
 
-                return result == 0 ? null : group;
+                return result == 0 
+                    ? DbOperationResult<Group>.FromError("DbError") 
+                    : DbOperationResult<Group>.FromSuccess(group);
             }
             catch (Exception ex)
             {
-                this._logger.LogError(new EventId(), ex, null);
+                this._logger.LogError(EventIds.AddGroupUnexpectedError, ex, null, group);
                 this._dbContext.Entry(group).State = EntityState.Detached;
-                throw;
+                return DbOperationResult<Group>.FromError("UnexpectedError");
             }        
         }
 
         /// <inheritdoc/>
-        public async Task<Group> GetGroupAsync(Guid groupId, CancellationToken cancellationToken = default)
+        public async Task<DbOperationResult<Group>> GetGroupAsync(Guid groupId, CancellationToken cancellationToken = default)
         {
             try
             {
@@ -49,17 +53,19 @@ namespace Chat.Db.Stores
                     .Include(g => g.UserGroups).ThenInclude(ug => ug.User)
                     .FirstOrDefaultAsync(g => g.GroupId == groupId, cancellationToken);
 
-                return result == null ? null : result;
+                return result == null 
+                    ? DbOperationResult<Group>.FromError("DbError")
+                    : DbOperationResult<Group>.FromSuccess(result);
             }
             catch (Exception ex)
             {
-                this._logger.LogError(new EventId(), ex, null);
-                throw;
+                this._logger.LogError(EventIds.GetGroupUnexpectedError, ex, null, groupId);
+                return DbOperationResult<Group>.FromError("UnexpectedError");
             }
         }
 
         /// <inheritdoc/>
-        public async Task<Group> UpdateGroupAsync(Group group, CancellationToken cancellationToken = default)
+        public async Task<DbOperationResult<Group>> UpdateGroupAsync(Group group, CancellationToken cancellationToken = default)
         {
             if (group == null)
             {
@@ -82,13 +88,15 @@ namespace Chat.Db.Stores
 
                 var result = await this._dbContext.SaveChangesAsync(cancellationToken);
 
-                return result == 0 ? null : group;
+                return result == 0
+                    ? DbOperationResult<Group>.FromError("DbError")
+                    : DbOperationResult<Group>.FromSuccess(dbGroup);
             }
             catch (Exception ex)
             {
-                this._logger.LogError(new EventId(), ex, null);
+                this._logger.LogError(EventIds.UpdateGroupUnexpectedError, ex, null, group);
                 this._dbContext.Entry(dbGroup).State = EntityState.Detached;
-                throw;
+                return DbOperationResult<Group>.FromError("UnexpectedError");
             }
         }
     }

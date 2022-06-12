@@ -1,4 +1,6 @@
 ﻿using Chat.Db.Models;
+using IdentityServer4.EntityFramework.DbContexts;
+using IdentityServer4.EntityFramework.Interfaces;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
@@ -41,6 +43,7 @@ namespace Chat.Db
                 entity.Property(e => e.RecModified).HasDefaultValueSql("now() at time zone 'utc'").IsRequired();
                 entity.Property(e => e.FirstName);
                 entity.Property(e => e.LastName);
+                entity.Property(e => e.Photo).HasDefaultValue(new byte[0]);
 
                 entity.HasMany(u => u.UserRoles)
                    .WithOne()
@@ -72,6 +75,7 @@ namespace Chat.Db
                     .WithMany(e => e.UserGroups)
                     .HasForeignKey(e => e.GroupId);
             });
+            InitDefaultData.Init(modelBuilder);
         }
     }
 }

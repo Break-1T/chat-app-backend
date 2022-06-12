@@ -11,6 +11,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Chat.Db", "src\Chat.Db\Chat
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Chat.Db.Migrations", "src\Chat.Db.Migrations\Chat.Db.Migrations.csproj", "{886772D1-7ECC-4B43-9E55-F793A74D313C}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Chat.IdentityServer", "src\Chat.IdentityServer\Chat.IdentityServer.csproj", "{4B7199F5-67FB-4FD3-959C-D6B9F58BCC66}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -29,6 +31,10 @@ Global
 		{886772D1-7ECC-4B43-9E55-F793A74D313C}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{886772D1-7ECC-4B43-9E55-F793A74D313C}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{886772D1-7ECC-4B43-9E55-F793A74D313C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{4B7199F5-67FB-4FD3-959C-D6B9F58BCC66}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{4B7199F5-67FB-4FD3-959C-D6B9F58BCC66}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{4B7199F5-67FB-4FD3-959C-D6B9F58BCC66}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{4B7199F5-67FB-4FD3-959C-D6B9F58BCC66}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -37,6 +43,7 @@ Global
 		{48B8D532-87D7-49EC-B938-9D697417D27E} = {A17152A8-C384-4999-98B9-9C95AC0706D1}
 		{8B897A5A-24A2-48FC-9781-9D6A39E8622B} = {A17152A8-C384-4999-98B9-9C95AC0706D1}
 		{886772D1-7ECC-4B43-9E55-F793A74D313C} = {A17152A8-C384-4999-98B9-9C95AC0706D1}
+		{4B7199F5-67FB-4FD3-959C-D6B9F58BCC66} = {A17152A8-C384-4999-98B9-9C95AC0706D1}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {A104292A-9C06-46D4-B065-8D722DCE0CC7}

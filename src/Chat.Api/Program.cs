@@ -1,6 +1,7 @@
 using Chat.Api.Constants;
 using Chat.Api.Extensions;
 using Chat.Api.Hubs;
+using Chat.Api.Models;
 using Chat.Db;
 using Chat.Db.Extensions;
 using Chat.Db.Models;
@@ -12,9 +13,10 @@ var builder = WebApplication.CreateBuilder(args);
 // Add services to the container.
 builder.Services.AddRazorPages();
 
+builder.Services.AddAutoMapper(typeof(MappingProfile));
+
 var postgresConnectionString = builder.Configuration.GetConnectionString("PostgresConnection");
 builder.Services.AddDbServices(postgresConnectionString);
-
 builder.Services.AddApiServices();
 
 builder.Services

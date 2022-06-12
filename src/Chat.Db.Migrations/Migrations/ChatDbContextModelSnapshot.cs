@@ -47,6 +47,22 @@ namespace Chat.Db.Migrations.Migrations
                         .HasDatabaseName("RoleNameIndex");
 
                     b.ToTable("AspNetRoles", (string)null);
+
+                    b.HasData(
+                        new
+                        {
+                            Id = new Guid("eb230ff7-64e2-480c-828b-c00b6917efb5"),
+                            ConcurrencyStamp = "8787CD7E-D016-4E77-8058-36BFE8226E75",
+                            Name = "User",
+                            NormalizedName = "USER"
+                        },
+                        new
+                        {
+                            Id = new Guid("9268d8a2-7b04-4bc4-88d9-5ca9643d4c3f"),
+                            ConcurrencyStamp = "8787CD7E-D016-4E77-8058-36BFE8226E75",
+                            Name = "MasterAdmin",
+                            NormalizedName = "MASTERADMIN"
+                        });
                 });
 
             modelBuilder.Entity("Chat.Db.Models.AppIdentityUser", b =>
@@ -70,11 +86,9 @@ namespace Chat.Db.Migrations.Migrations
                         .HasColumnType("boolean");
 
                     b.Property<string>("FirstName")
-                        .IsRequired()
                         .HasColumnType("text");
 
                     b.Property<string>("LastName")
-                        .IsRequired()
                         .HasColumnType("text");
 
                     b.Property<bool>("LockoutEnabled")
@@ -101,8 +115,9 @@ namespace Chat.Db.Migrations.Migrations
                         .HasColumnType("boolean");
 
                     b.Property<byte[]>("Photo")
-                        .IsRequired()
-                        .HasColumnType("bytea");
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bytea")
+                        .HasDefaultValue(new byte[0]);
 
                     b.Property<DateTime>("RecCreated")
                         .ValueGeneratedOnAdd()
@@ -120,9 +135,6 @@ namespace Chat.Db.Migrations.Migrations
                     b.Property<bool>("TwoFactorEnabled")
                         .HasColumnType("boolean");
 
-                    b.Property<Guid>("UserId")
-                        .HasColumnType("uuid");
-
                     b.Property<string>("UserName")
                         .HasMaxLength(256)
                         .HasColumnType("character varying(256)");
@@ -137,6 +149,26 @@ namespace Chat.Db.Migrations.Migrations
                         .HasDatabaseName("UserNameIndex");
 
                     b.ToTable("AspNetUsers", (string)null);
+
+                    b.HasData(
+                        new
+                        {
+                            Id = new Guid("edc610ea-54e0-4c8f-87d1-103b4f341b6b"),
+                            AccessFailedCount = 0,
+                            ConcurrencyStamp = "8787CD7E-D016-4E77-8058-36BFE8226E75",
+                            Email = "admin@admin.com",
+                            EmailConfirmed = true,
+                            LockoutEnabled = false,
+                            NormalizedEmail = "ADMIN@ADMIN.COM",
+                            NormalizedUserName = "ADMIN@ADMIN.COM",
+                            PasswordHash = "AQAAAAEAACcQAAAAEBO+EfuFeO1j+34xk4bXH/kxMam3hzOQPGQlEKJ3yFFqlYORrVz/L2/6mrWjTZI1zw==",
+                            PhoneNumberConfirmed = false,
+                            RecCreated = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            RecModified = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            SecurityStamp = "8787CD7E-D016-4E77-8058-36BFE8226E75",
+                            TwoFactorEnabled = false,
+                            UserName = "admin@admin.com"
+                        });
                 });
 
             modelBuilder.Entity("Chat.Db.Models.AppIdentityUserRole", b =>
@@ -152,6 +184,13 @@ namespace Chat.Db.Migrations.Migrations
                     b.HasIndex("RoleId");
 
                     b.ToTable("AspNetUserRoles", (string)null);
+
+                    b.HasData(
+                        new
+                        {
+                            UserId = new Guid("edc610ea-54e0-4c8f-87d1-103b4f341b6b"),
+                            RoleId = new Guid("9268d8a2-7b04-4bc4-88d9-5ca9643d4c3f")
+                        });
                 });
 
             modelBuilder.Entity("Chat.Db.Models.Group", b =>
@@ -164,7 +203,6 @@ namespace Chat.Db.Migrations.Migrations
                         .HasColumnType("uuid");
 
                     b.Property<byte[]>("Image")
-                        .IsRequired()
                         .HasColumnType("bytea");
 
                     b.Property<string>("Name")
@@ -174,12 +212,12 @@ namespace Chat.Db.Migrations.Migrations
                     b.Property<DateTime>("RecCreated")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("timestamp with time zone")
-                        .HasDefaultValue(new DateTime(2022, 6, 12, 14, 29, 31, 48, DateTimeKind.Utc).AddTicks(8202));
+                        .HasDefaultValue(new DateTime(2022, 6, 12, 20, 1, 36, 599, DateTimeKind.Utc).AddTicks(6649));
 
                     b.Property<DateTime>("RecModified")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("timestamp with time zone")
-                        .HasDefaultValue(new DateTime(2022, 6, 12, 14, 29, 31, 48, DateTimeKind.Utc).AddTicks(8454));
+                        .HasDefaultValue(new DateTime(2022, 6, 12, 20, 1, 36, 599, DateTimeKind.Utc).AddTicks(6812));
 
                     b.HasKey("GroupId");
 

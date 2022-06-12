@@ -1,5 +1,7 @@
 ﻿using Chat.Api.Interfaces;
+using Chat.Api.Models.Users;
 using Microsoft.AspNetCore.Mvc;
+using System.Net;
 
 namespace Chat.Api.Controllers
 {
@@ -21,6 +23,27 @@ namespace Chat.Api.Controllers
         public UserController(IUserService userService)
         {
             this._userService = userService ?? throw new ArgumentNullException(nameof(userService));
+        }
+
+        /// <summary>
+        /// Creates the specified create user request.
+        /// </summary>
+        /// <param name="createUserRequest">The create user request.</param>
+        /// <param name="cancellationToken">The cancellation token.</param>
+        /// <returns>IActionResult.</returns>
+        [HttpPost("create")]
+        [ProducesResponseType(typeof(User), (int)HttpStatusCode.Created)]
+        [ProducesResponseType(typeof(SerializableError), (int)HttpStatusCode.BadRequest)]
+        public async Task<IActionResult> Create([FromBody] CreateUserRequest createUserRequest, CancellationToken cancellationToken = default)
+        {
+            var createUserResult = await this._userService.CreateUserAsync(createUserRequest, cancellationToken);
+
+            if (!createUserResult.IsSuccess)
+            {
+                return this.BadRequest(createUserResult.Error);
+            }
+
+            return this.Created(this.Request.Path, createUserResult.Entity);
         }
     }
 }

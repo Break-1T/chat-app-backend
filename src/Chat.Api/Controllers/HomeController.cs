@@ -20,8 +20,8 @@ namespace Chat.Api.Controllers
         /// <summary>
         /// Initializes a new instance of the <see cref="HomeController"/> class.
         /// </summary>
-        /// <param name="logger">The logger.</param>
-        /// <exception cref="ArgumentNullException">logger.</exception>
+        /// <param name="logger">The _logger.</param>
+        /// <exception cref="ArgumentNullException">_logger.</exception>
         public HomeController(ILogger<HomeController> logger)
         {
             this._logger = logger ?? throw new ArgumentNullException(nameof(logger));

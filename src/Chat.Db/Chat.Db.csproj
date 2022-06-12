@@ -8,10 +8,10 @@
 
   <ItemGroup>
     <Folder Include="Extensions\" />
-    <Folder Include="Constants\" />
   </ItemGroup>
 
   <ItemGroup>
+    <PackageReference Include="IdentityServer4.EntityFramework.Storage" Version="4.1.2" />
     <PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="6.0.5" />
     <PackageReference Include="Microsoft.EntityFrameworkCore" Version="6.0.5" />
     <PackageReference Include="Npgsql" Version="6.0.4" />

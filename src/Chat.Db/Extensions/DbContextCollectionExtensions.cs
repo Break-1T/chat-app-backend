@@ -1,4 +1,6 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using Chat.Db.Interfaces;
+using Chat.Db.Stores;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 namespace Chat.Db.Extensions
 {
@@ -36,7 +38,7 @@ namespace Chat.Db.Extensions
                 });
             });
 
-            //services.AddScoped<ISessionStore, SessionStore>();
+            services.AddScoped<IGroupStore, GroupStore>();
 
             return services;
         }

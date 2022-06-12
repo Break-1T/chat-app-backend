@@ -8,6 +8,7 @@ namespace Chat.Api.Extensions
         public static void AddApiServices(this IServiceCollection services)
         {
             services.AddScoped<IUserService, UserService>();
+            services.AddScoped<IGroupService, GroupService>();
         }
     }
 }

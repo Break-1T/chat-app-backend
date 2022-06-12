@@ -9,24 +9,19 @@ namespace Chat.Db.Models
     public class AppIdentityUser : IdentityUser<Guid>
     {
         /// <summary>
-        /// Gets or sets the user identifier.
-        /// </summary>
-        public Guid UserId { get; set; }
-
-        /// <summary>
         /// Gets or sets the first name.
         /// </summary>
-        public string FirstName { get; set; }
+        public string? FirstName { get; set; }
 
         /// <summary>
         /// Gets or sets the last name.
         /// </summary>
-        public string LastName { get; set; }
+        public string? LastName { get; set; }
 
         /// <summary>
         /// Gets or sets the photo.
         /// </summary>
-        public byte[] Photo { get; set; }
+        public byte[]? Photo { get; set; }
 
         /// <summary>
         /// Gets or sets the record created.

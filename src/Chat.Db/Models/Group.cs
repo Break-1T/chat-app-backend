@@ -23,7 +23,7 @@
         /// <summary>
         /// Gets or sets the image.
         /// </summary>
-        public byte[] Image { get; set; }
+        public byte[]? Image { get; set; }
 
         /// <summary>
         /// Gets or sets the record created.

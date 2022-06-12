@@ -1,0 +1,19 @@
+﻿<Project Sdk="Microsoft.NET.Sdk.Web">
+
+  <PropertyGroup>
+    <TargetFramework>net6.0</TargetFramework>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="IdentityServer4.AspNetIdentity" Version="4.1.2" />
+
+    <PackageReference Include="Microsoft.AspNetCore.Authentication.Google" Version="6.0.5" />
+    <PackageReference Include="Serilog.AspNetCore" Version="5.0.0" />
+    <PackageReference Include="Microsoft.AspNetCore.Identity.UI" Version="6.0.5" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Chat.Db.Migrations\Chat.Db.Migrations.csproj" />
+    <ProjectReference Include="..\Chat.Db\Chat.Db.csproj" />
+  </ItemGroup>
+</Project>
