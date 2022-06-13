@@ -18,6 +18,8 @@ namespace Chat.Api.Extensions
                 throw new ArgumentNullException(nameof(claimsPrincipal));
             }
 
+            // todo fix
+
             //var value = claimsPrincipal.GetClaimValue(ApiConstant.ApiClaims.UserId);
             var value = claimsPrincipal.GetClaimValue("http://schemas.xmlsoap.org/ws/2005/05/identity/claims/nameidentifier");
             return Guid.Parse(value);
@@ -27,7 +29,7 @@ namespace Chat.Api.Extensions
         /// Gets the session identifier.
         /// </summary>
         /// <param name="claimsPrincipal">The claims principal.</param>
-        /// <returns>SessionId.</returns>
+        /// <returns>GroupId.</returns>
         /// <exception cref="ArgumentNullException">claimsPrincipal.</exception>
         public static Guid? GetSessionId(this ClaimsPrincipal claimsPrincipal)
         {
@@ -60,8 +62,6 @@ namespace Chat.Api.Extensions
             {
                 throw new ArgumentException($"Value is null or empty. ", nameof(claimName));
             }
-
-            var cl = claimsPrincipal.Claims.FirstOrDefault(cl => cl.Type.Equals(claimName, StringComparison.InvariantCultureIgnoreCase));
 
             return claimsPrincipal.Claims.FirstOrDefault(cl => cl.Type.Equals(claimName, StringComparison.InvariantCultureIgnoreCase))?.Value;
         }

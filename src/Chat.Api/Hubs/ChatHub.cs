@@ -4,9 +4,47 @@ namespace Chat.Api.Hubs
 {
     public class ChatHub : Hub
     {
-        public async Task SendMessage(string groupId, string message)
+        private const string SendMessageName = "SendMessage";
+
+        private Guid GroupId
         {
-            await Clients.OthersInGroup(groupId).SendAsync(message);
+            get
+            {
+                var segments = this.Context.GetHttpContext().Request.Path.ToString().Split("/").ToList();
+
+                if (segments.Count != 3 || !Guid.TryParse(segments[2], out var groupId))
+                {
+                    throw new ArgumentException("Incorect groupId");
+                }
+
+                return groupId;
+            }
+        }
+
+        public async Task SendMessage(string userName, string message)
+        {
+            await Clients.OthersInGroup(GroupId.ToString()).SendAsync(SendMessageName, userName, message);
+        }
+
+        /// <summary>
+        /// Called when a new connection is established with the hub.
+        /// </summary>
+        /// <returns>A System.Threading.Tasks.Task that represents the asynchronous connect.</returns>
+        public override async Task OnConnectedAsync()
+        {
+            await this.Groups.AddToGroupAsync(this.Context.ConnectionId, this.GroupId.ToString());
+            await base.OnConnectedAsync();
+        }
+
+        /// <summary>
+        /// Called when [disconnected asynchronous].
+        /// </summary>
+        /// <param name="ex">The ex.</param>
+        /// <returns>A System.Threading.Tasks.Task that represents the asynchronous disconnect.</returns>
+        public override async Task OnDisconnectedAsync(Exception ex)
+        {
+            await this.Groups.RemoveFromGroupAsync(this.Context.ConnectionId, this.GroupId.ToString());
+            await base.OnDisconnectedAsync(ex);
         }
     }
 }
