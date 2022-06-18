@@ -9,6 +9,8 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
+using Serilog;
+using Serilog.Hosting;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -94,6 +96,10 @@ builder.Services.AddSwaggerGen(options =>
     });
 });
 
+builder.Host.UseSerilog((ctx, lc) => lc
+    .WriteTo.Console()
+    .WriteTo.Debug());
+
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
@@ -119,6 +125,8 @@ app.UseAuthorization();
 
 app.UseSwagger();
 app.UseSwaggerUI();
+
+app.UseSerilogRequestLogging();
 
 app.UseEndpoints(builder =>
 {
