@@ -10,7 +10,7 @@ namespace Chat.Api.Controllers
     /// </summary>
     /// <seealso cref="Microsoft.AspNetCore.Mvc.Controller" />
     [ApiController]
-    [Route("[controller]")]
+    [Route("api/[controller]")]
     //[Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
     public class UserController : ControllerBase
     {
@@ -32,12 +32,35 @@ namespace Chat.Api.Controllers
         /// <param name="createUserRequest">The create user request.</param>
         /// <param name="cancellationToken">The cancellation token.</param>
         /// <returns>IActionResult.</returns>
-        [HttpPost("create")]
+        [HttpPost("signup")]
         [ProducesResponseType(typeof(User), (int)HttpStatusCode.Created)]
         [ProducesResponseType(typeof(SerializableError), (int)HttpStatusCode.BadRequest)]
-        public async Task<IActionResult> Create([FromBody] CreateUserRequest createUserRequest, CancellationToken cancellationToken = default)
+        public async Task<IActionResult> SignUp([FromBody] CreateUserRequest createUserRequest, CancellationToken cancellationToken = default)
         {
-            var createUserResult = await this._userService.CreateUserAsync(createUserRequest, cancellationToken);
+            var createUserResult = await this._userService.SignUpAsync(createUserRequest, cancellationToken);
+
+            if (!createUserResult.IsSuccess)
+            {
+                return this.BadRequest(createUserResult.Error);
+            }
+
+            return this.Created(this.Request.Path, createUserResult.Entity);
+        }
+
+        /// <summary>
+        /// Logins the specified login request.
+        /// </summary>
+        /// <param name="loginRequest">The create user request.</param>
+        /// <param name="cancellationToken">The cancellation token.</param>
+        /// <returns>
+        /// IActionResult.
+        /// </returns>
+        [HttpPost("login")]
+        [ProducesResponseType(typeof(User), (int)HttpStatusCode.Created)]
+        [ProducesResponseType(typeof(SerializableError), (int)HttpStatusCode.BadRequest)]
+        public async Task<IActionResult> Login([FromBody] LoginUserRequest loginRequest, CancellationToken cancellationToken = default)
+        {
+            var createUserResult = await this._userService.LoginAsync(loginRequest, cancellationToken);
 
             if (!createUserResult.IsSuccess)
             {

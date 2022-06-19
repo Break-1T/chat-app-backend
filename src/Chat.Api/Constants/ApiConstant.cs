@@ -4,6 +4,10 @@
     {
         public const string SocketPath = "hub";
 
+        public const string GetTokenPath = "/connect/token";
+
+        public const string Scopes = "Group openid offline_access";
+
         public static class ApiClaims
         {
             public const string UserIdClaimType = "UserId";

@@ -10,7 +10,6 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using Serilog;
-using Serilog.Hosting;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -30,7 +29,7 @@ builder.Services.AddAutoMapper(typeof(MappingProfile));
 
 var postgresConnectionString = builder.Configuration.GetConnectionString("PostgresConnection");
 builder.Services.AddDbServices(postgresConnectionString);
-builder.Services.AddApiServices();
+builder.Services.AddApiServices(builder.Configuration);
 
 builder.Services
     .AddIdentityCore<AppIdentityUser>(options =>
@@ -50,6 +49,27 @@ builder.Services
     .AddEntityFrameworkStores<ChatDbContext>()
     .AddDefaultTokenProviders();
 
+builder.Services.Configure<IdentityOptions>(options =>
+{
+    // Password settings.
+    options.Password.RequireDigit = true;
+    options.Password.RequireLowercase = true;
+    options.Password.RequireNonAlphanumeric = true;
+    options.Password.RequireUppercase = true;
+    options.Password.RequiredLength = 6;
+    options.Password.RequiredUniqueChars = 1;
+
+    // Lockout settings.
+    options.Lockout.DefaultLockoutTimeSpan = TimeSpan.FromMinutes(5);
+    options.Lockout.MaxFailedAccessAttempts = 5;
+    options.Lockout.AllowedForNewUsers = true;
+
+    // User settings.
+    options.User.AllowedUserNameCharacters =
+    "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789-._@+";
+    options.User.RequireUniqueEmail = false;
+});
+
 builder.Services.AddRouting(options => options.LowercaseUrls = true);
 
 builder.Services.AddMvcCore()
@@ -67,8 +87,8 @@ builder.Services.AddRazorPages();
 builder.Services.AddAuthentication("Bearer")
     .AddJwtBearer("Bearer", options =>
     {
-        Console.WriteLine(builder.Configuration.GetSection("Auth:IdentityServer_Url").Value);
-        options.Authority = builder.Configuration.GetSection("Auth:IdentityServer_Url").Value;
+        Console.WriteLine(builder.Configuration.GetSection("Auth:IdentityServerUrl").Value);
+        options.Authority = builder.Configuration.GetSection("Auth:IdentityServerUrl").Value;
         options.RequireHttpsMetadata = false;
         options.IncludeErrorDetails = true;
         options.TokenValidationParameters = new TokenValidationParameters

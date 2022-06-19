@@ -45,8 +45,9 @@ clients.Add(new Client
     ClientId = builder.Configuration.GetSection("Client:ClientId").Value,
     ClientSecrets = { new Secret(builder.Configuration.GetSection("Client:ClientSecret").Value.Sha256()) },
     AllowedGrantTypes = GrantTypes.ResourceOwnerPassword,
-    AllowedScopes = { "Group" },
+    AllowedScopes = { "Group", IdentityServerConstants.StandardScopes.OfflineAccess, IdentityServerConstants.StandardScopes.OpenId },
     AllowAccessTokensViaBrowser = true,
+    AllowOfflineAccess = true,
 });
 
 var identityServerBuilder = builder.Services.AddIdentityServer(options =>

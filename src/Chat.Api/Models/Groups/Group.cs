@@ -18,7 +18,7 @@ namespace Chat.Api.Models.Groups
         /// Gets or sets the name of the group.
         /// </summary>
         [JsonPropertyName("group_name")]
-        public string? GroupName { get; set; }
+        public string GroupName { get; set; }
 
         /// <summary>
         /// Gets or sets the group image.
