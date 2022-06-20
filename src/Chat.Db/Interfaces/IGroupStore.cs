@@ -3,6 +3,9 @@ using Chat.Db.ResultModels;
 
 namespace Chat.Db.Interfaces 
 {
+    /// <summary>
+    /// IGroupStore.
+    /// </summary>
     public interface IGroupStore
     {
         /// <summary>
@@ -12,6 +15,14 @@ namespace Chat.Db.Interfaces
         /// <param name="cancellationToken">The cancellation token.</param>
         /// <returns>A <see cref="Task"> containing <see cref="DbOperationResult{TEntity}"/> of operation.</returns>
         Task<DbOperationResult<Group>> GetGroupAsync(Guid groupId, CancellationToken cancellationToken = default);
+
+        /// <summary>
+        /// Gets the groups asynchronous.
+        /// </summary>
+        /// <param name="userId">The user identifier.</param>
+        /// <param name="cancellationToken">The cancellation token.</param>
+        /// <returns>A <see cref="Task"> containing <see cref="DbOperationResult{TEntity}"/> of operation.</returns>
+        Task<DbOperationResult<List<Group>>> GetGroupsAsync(Guid userId, CancellationToken cancellationToken = default);
 
         /// <summary>
         /// Adds the group asynchronous.

@@ -18,5 +18,22 @@ namespace Chat.Api.Interfaces
         /// ApiOperationResult.
         /// </returns>
         Task<ApiOperationResult<Group>> CreateGroupAsync(Group createGroupRequest, Guid currentUserId, CancellationToken cancellationToken = default);
+
+        /// <summary>
+        /// Gets the list groups asynchronous.
+        /// </summary>
+        /// <param name="currentUserId">The current user identifier.</param>
+        /// <param name="cancellationToken">The cancellation token.</param>
+        /// <returns>ApiOperationResult.</returns>
+        Task<ApiOperationResult<List<Group>>> GetGroupsAsync(Guid currentUserId, CancellationToken cancellationToken = default);
+
+        /// <summary>
+        /// Gets the group asynchronous.
+        /// </summary>
+        /// <param name="groupId">The group identifier.</param>
+        /// <param name="cancellationToken">The cancellation token.</param>
+        /// <returns>ApiOperationResult.</returns>
+        Task<ApiOperationResult<Group>> GetGroupAsync(Guid groupId, CancellationToken cancellationToken = default);
+
     }
 }

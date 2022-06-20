@@ -13,7 +13,7 @@ namespace Chat.Api.Controllers
     /// </summary>
     /// <seealso cref="Microsoft.AspNetCore.Mvc.Controller" />
     [ApiController]
-    [Route("[controller]")]
+    [Route("api/[controller]")]
     [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
     public class GroupController : ControllerBase
     {
@@ -49,6 +49,37 @@ namespace Chat.Api.Controllers
             }
 
             return this.Created(this.Request.Path, createGroupResult.Entity);
+        }
+
+        [HttpGet("list")]
+        [ProducesResponseType(typeof(List<Group>), (int)HttpStatusCode.OK)]
+        [ProducesResponseType(typeof(SerializableError), (int)HttpStatusCode.BadRequest)]
+        public async Task<IActionResult> GetList(CancellationToken cancellationToken = default)
+        {
+            var currentUserId = this.User.GetUserId();
+            var getListGroupsResult = await this._groupService.GetGroupsAsync(currentUserId, cancellationToken);
+
+            if (!getListGroupsResult.IsSuccess)
+            {
+                return this.BadRequest(getListGroupsResult.Error);
+            }
+
+            return this.Ok(getListGroupsResult.Entity);
+        }
+
+        [HttpGet("{groupId:guid}")]
+        [ProducesResponseType(typeof(Group), (int)HttpStatusCode.OK)]
+        [ProducesResponseType(typeof(SerializableError), (int)HttpStatusCode.BadRequest)]
+        public async Task<IActionResult> Get(Guid groupId, CancellationToken cancellationToken = default)
+        {
+            var getListGroupResult = await this._groupService.GetGroupAsync(groupId, cancellationToken);
+
+            if (!getListGroupResult.IsSuccess)
+            {
+                return this.BadRequest(getListGroupResult.Error);
+            }
+
+            return this.Ok(getListGroupResult.Entity);
         }
     }
 }

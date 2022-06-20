@@ -1,6 +1,4 @@
 ﻿using Chat.Db.Models;
-using IdentityServer4.EntityFramework.DbContexts;
-using IdentityServer4.EntityFramework.Interfaces;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
@@ -14,6 +12,15 @@ namespace Chat.Db
         /// </summary>
         public virtual DbSet<Group> Groups { get; set; }
 
+        /// <summary>
+        /// Gets or sets the user groups.
+        /// </summary>
+        public virtual DbSet<UserGroup> UserGroups { get; set; }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="ChatDbContext"/> class.
+        /// </summary>
+        /// <param name="options">The options.</param>
         public ChatDbContext(DbContextOptions<ChatDbContext> options)
             : base(options)
         {

@@ -49,7 +49,6 @@ namespace Chat.Db.Stores
             try
             {
                 var result = await this._dbContext.Groups.AsNoTracking()
-                    .Include(g => g.UserGroups).ThenInclude(ug => ug.Group)
                     .Include(g => g.UserGroups).ThenInclude(ug => ug.User)
                     .FirstOrDefaultAsync(g => g.GroupId == groupId, cancellationToken);
 
@@ -61,6 +60,26 @@ namespace Chat.Db.Stores
             {
                 this._logger.LogError(EventIds.GetGroupUnexpectedError, ex, null, groupId);
                 return DbOperationResult<Group>.FromError("UnexpectedError");
+            }
+        }
+
+        /// <inheritdoc/>
+        public async Task<DbOperationResult<List<Group>>> GetGroupsAsync(Guid userId, CancellationToken cancellationToken = default)
+        {
+            try
+            {
+                var result = await this._dbContext.UserGroups.AsNoTracking()
+                    .Include(ug => ug.Group)
+                    .Where(ug => ug.UserId == userId)
+                    .Select(ug => ug.Group)
+                    .ToListAsync(cancellationToken);
+
+                return DbOperationResult<List<Group>>.FromSuccess(result);
+            }
+            catch (Exception ex)
+            {
+                this._logger.LogError(EventIds.GetGroupsUnexpectedError, ex, null, userId);
+                return DbOperationResult<List<Group>>.FromError("UnexpectedError");
             }
         }
 

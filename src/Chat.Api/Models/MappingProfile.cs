@@ -26,7 +26,7 @@ namespace Chat.Api.Models
             this.CreateMap<Db.Models.Group, Group>()
                 .ForMember(dest => dest.GroupId, opt => opt.MapFrom((src, dest) => src.GroupId))
                 .ForMember(dest => dest.GroupName, opt => opt.MapFrom((src, dest) => src.Name))
-                .ForMember(dest => dest.Users, opt => opt.MapFrom((src, dest) => src.UserGroups.Select(ug => ug.User)))
+                .ForMember(dest => dest.Users, opt => opt.MapFrom((src, dest) => src.UserGroups?.Select(ug => ug?.User)))
                 .ForMember(dest => dest.GroupImage, opt => opt.MapFrom((src, dest) => src.Image));
         }
     }
