@@ -10,8 +10,8 @@ namespace Chat.Api.Models.Users
         /// <summary>
         /// Gets or sets the email.
         /// </summary>
-        [JsonPropertyName("email")]
-        public string Email { get; set; }
+        [JsonPropertyName("user_name")]
+        public string UserName { get; set; }
 
         /// <summary>
         /// Gets or sets the password.

@@ -107,7 +107,7 @@ namespace Chat.Api.Services
                         { "client_secret", this._options.ClientSecret },
                         { "grant_type", "password" },
                         { "scope", ApiConstant.Scopes },
-                        { "username", loginUserRequest.Email },
+                        { "username", loginUserRequest.UserName },
                         { "password", loginUserRequest.Password },
                         }),
                     RequestUri = new Uri(new Uri(this._options.IdentityServerUrl), ApiConstant.GetTokenPath),
