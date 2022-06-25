@@ -23,6 +23,8 @@
         /// The login unexpected error.
         /// </summary>
         public static EventId LoginUnexpectedError = new EventId(2404, "LOGIN_UNEXPECTED_ERROR");
+        
+        public static EventId TryConnectUnexpectedError = new EventId(2405, "TRY_CONNECT_UNEXPECTED_ERROR");
 
         #endregion
     }

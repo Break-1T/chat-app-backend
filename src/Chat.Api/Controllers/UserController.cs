@@ -25,7 +25,7 @@ namespace Chat.Api.Controllers
         {
             this._userService = userService ?? throw new ArgumentNullException(nameof(userService));
         }
-
+          
         /// <summary>
         /// Creates the specified create user request.
         /// </summary>

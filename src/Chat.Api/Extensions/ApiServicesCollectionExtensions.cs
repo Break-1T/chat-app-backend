@@ -6,15 +6,15 @@ namespace Chat.Api.Extensions
 {
     public static class ApiServicesCollectionExtensions
     {
-        private const string AuthSecrion = "Auth";
+        private const string AuthSection = "Auth";
 
         public static void AddApiServices(this IServiceCollection services, IConfiguration configuration)
         {
             services.AddHttpClient<IUserService, UserService>();
-            //services.AddScoped<IUserService, UserService>();
             services.AddScoped<IGroupService, GroupService>();
+            services.AddScoped<IChatService, ChatService>();
 
-            services.Configure<AuthOptions>(configuration.GetSection(AuthSecrion));
+            services.Configure<AuthOptions>(configuration.GetSection(AuthSection));
         }
     }
 }

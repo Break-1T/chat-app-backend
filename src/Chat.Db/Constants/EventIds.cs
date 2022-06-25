@@ -26,6 +26,8 @@ namespace Chat.Db.Constants
         /// </summary>
         public static EventId GetGroupsUnexpectedError = new EventId(1405, "GET_GROUPS_UNEXPECTED_ERROR");
 
+        public static EventId GetUserGroupUnexpectedError = new EventId(1406, "GET_USER_GROUP_UNEXPECTED_ERROR");
+
         #endregion
     }
 }

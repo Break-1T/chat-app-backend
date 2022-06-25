@@ -18,6 +18,11 @@ namespace Chat.Db
         public virtual DbSet<UserGroup> UserGroups { get; set; }
 
         /// <summary>
+        /// Gets or sets the chat messages.
+        /// </summary>
+        public virtual DbSet<ChatMessage> ChatMessages { get; set; }
+
+        /// <summary>
         /// Initializes a new instance of the <see cref="ChatDbContext"/> class.
         /// </summary>
         /// <param name="options">The options.</param>
@@ -38,8 +43,12 @@ namespace Chat.Db
                 entity.Property(e => e.Name);
                 entity.Property(e => e.Image);
 
-                entity.Property(e => e.RecCreated).HasDefaultValue(DateTime.UtcNow).IsRequired();
-                entity.Property(e => e.RecModified).HasDefaultValue(DateTime.UtcNow).IsRequired();
+                entity.Property(e => e.RecCreated).HasDefaultValueSql("now() at time zone 'utc'").IsRequired();
+                entity.Property(e => e.RecModified).HasDefaultValueSql("now() at time zone 'utc'").IsRequired();
+
+                entity.HasMany(u => u.ChatMessages)
+                    .WithOne()
+                    .HasForeignKey(e => e.GroupId);
 
                 entity.HasIndex(e => e.Name);
             });
@@ -56,6 +65,10 @@ namespace Chat.Db
                    .WithOne()
                    .HasForeignKey(ur => ur.UserId)
                    .IsRequired();
+
+                entity.HasMany(u => u.ChatMessages)
+                    .WithOne()
+                    .HasForeignKey(e => e.UserId);
             });
 
             modelBuilder.Entity<AppIdentityUserRole>(entity =>
@@ -82,6 +95,19 @@ namespace Chat.Db
                     .WithMany(e => e.UserGroups)
                     .HasForeignKey(e => e.GroupId);
             });
+
+            modelBuilder.Entity<ChatMessage>(entity => 
+            {
+                entity.ToTable("ChatMessage");
+
+                entity.HasKey(e => e.ChatId);
+
+                entity.Property(e => e.Message);
+                entity.Property(e => e.RecCreated).HasDefaultValueSql("now() at time zone 'utc'").IsRequired();
+
+                entity.HasIndex(e => new { e.GroupId, e.Message });
+            });
+
             InitDefaultData.Init(modelBuilder);
         }
     }

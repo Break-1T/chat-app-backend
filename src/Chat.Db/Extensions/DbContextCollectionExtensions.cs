@@ -39,6 +39,7 @@ namespace Chat.Db.Extensions
             });
 
             services.AddScoped<IGroupStore, GroupStore>();
+            services.AddScoped<IUserGroupStore, UserGroupStore>();
 
             return services;
         }

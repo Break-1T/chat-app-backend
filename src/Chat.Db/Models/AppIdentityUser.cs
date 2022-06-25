@@ -42,5 +42,9 @@ namespace Chat.Db.Models
         /// Gets or sets the user groups.
         /// </summary>
         public virtual ICollection<UserGroup> UserGroups { get; set; }
+
+        /// <summary>
+        /// Gets or sets the chat messages.
+        public virtual ICollection<ChatMessage> ChatMessages { get; set; }
     }
 }
