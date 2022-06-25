@@ -24,6 +24,7 @@ namespace Chat.Db.Stores
             try
             {
                 var result = await this._dbContext.UserGroups.AsNoTracking()
+                    .Include(ug => ug.User)
                     .FirstOrDefaultAsync(ug => ug.GroupId == groupId && ug.UserId == userId, cancellationToken);
 
                 return result == null 

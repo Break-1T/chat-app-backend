@@ -1,10 +1,10 @@
 ﻿using Chat.Api.Extensions;
 using Chat.Api.Hubs;
 using Chat.Api.Interfaces;
+using Chat.Api.Models.Users;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.SignalR;
 using System.Net;
 
 namespace Chat.Api.Controllers
@@ -15,7 +15,6 @@ namespace Chat.Api.Controllers
     public class ChatController : ControllerBase
     {
         private readonly IChatService _chatService;
-        private readonly IHubContext<ChatHub> _hubContext;
 
         public ChatController(IChatService chatService)
         {
@@ -23,15 +22,15 @@ namespace Chat.Api.Controllers
         }
 
         /// <summary>
-        /// Creates the specified create group request.
+        /// Try to connect to group.
         /// </summary>
         /// <param name="createGroupRequest">The create group request.</param>
         /// <param name="cancellationToken">The cancellation token.</param>
         /// <returns>IActionResult.</returns>
-        [HttpPost("")]
-        [ProducesResponseType((int)HttpStatusCode.OK)]
-        [ProducesResponseType((int)HttpStatusCode.BadRequest)]
-        public async Task<IActionResult> TryConnect([FromQuery(Name = "group_id")] Guid groupId, CancellationToken cancellationToken = default)
+        [HttpPost("{groupId:guid}")]
+        [ProducesResponseType(typeof(User), (int)HttpStatusCode.OK)]
+        [ProducesResponseType(typeof(SerializableError), (int)HttpStatusCode.BadRequest)]
+        public async Task<IActionResult> TryConnect(Guid groupId, CancellationToken cancellationToken = default)
         {
             var currentUserId = this.User.GetUserId();
             var connectResult = await this._chatService.TryConnectAsync(currentUserId, groupId, cancellationToken);
@@ -41,7 +40,7 @@ namespace Chat.Api.Controllers
                 return this.BadRequest(connectResult.Error);
             }
 
-            return this.Ok();
+            return this.Ok(connectResult.Entity);
         }
     }
 }

@@ -1,7 +1,10 @@
-﻿using Microsoft.AspNetCore.SignalR;
+﻿using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.SignalR;
 
 namespace Chat.Api.Hubs
 {
+    //[Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
     public class ChatHub : Hub
     {
         private const string SendMessageName = "SendMessage";
@@ -21,9 +24,9 @@ namespace Chat.Api.Hubs
             }
         }
 
-        public async Task SendMessage(string userName, string message)
+        public async Task SendMessage(object user, string message)
         {
-            await Clients.OthersInGroup(GroupId.ToString()).SendAsync(SendMessageName, userName, message);
+            await Clients.Group(GroupId.ToString()).SendAsync(SendMessageName, user, message);
         }
 
         /// <summary>
