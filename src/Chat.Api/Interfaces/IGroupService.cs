@@ -34,6 +34,6 @@ namespace Chat.Api.Interfaces
         /// <param name="cancellationToken">The cancellation token.</param>
         /// <returns>ApiOperationResult.</returns>
         Task<ApiOperationResult<Group>> GetGroupAsync(Guid groupId, CancellationToken cancellationToken = default);
-
+        Task<ApiOperationResult<Group>> LeaveGroupAsync(Guid currentUserId, Guid groupId, CancellationToken cancellationToken);
     }
 }

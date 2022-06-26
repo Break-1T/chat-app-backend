@@ -13,5 +13,7 @@ namespace Chat.Db.Interfaces
         /// <param name="cancellationToken"></param>
         /// <returns>DbOperationResult>.</returns>
         Task<DbOperationResult<UserGroup>> GetUserGroupAsync(Guid userId, Guid groupId, CancellationToken cancellationToken = default);
+
+        Task<DbOperationResult<UserGroup>> DeleteUserGroupAsync(Guid userId, Guid groupId, CancellationToken cancellationToken = default);
     }
 }

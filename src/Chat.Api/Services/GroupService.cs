@@ -13,12 +13,14 @@ namespace Chat.Api.Services
         private readonly ILogger<GroupService> _logger;
         private readonly IMapper _mapper;
         private readonly IGroupStore _groupStore;
+        private readonly IUserGroupStore _userGroupStore;
 
-        public GroupService(ILogger<GroupService> logger, IMapper mapper, IGroupStore groupStore)
+        public GroupService(ILogger<GroupService> logger, IMapper mapper, IGroupStore groupStore, IUserGroupStore userGroupStore)
         {
             this._logger = logger ?? throw new ArgumentNullException(nameof(logger));
             this._mapper = mapper ?? throw new ArgumentNullException(nameof(mapper));
             this._groupStore = groupStore ?? throw new ArgumentNullException(nameof(groupStore));
+            this._userGroupStore = userGroupStore ?? throw new ArgumentNullException(nameof(userGroupStore));
         }
 
         /// <inheritdoc/>
@@ -35,6 +37,17 @@ namespace Chat.Api.Services
                         UserId = currentUserId,
                     }
                 };
+
+                if (createGroupRequest.Users != null)
+                {
+                    foreach (var user in createGroupRequest.Users)
+                    {
+                        dbGroup.UserGroups.Add(new Db.Models.UserGroup
+                        {
+                            UserId = user.Id.Value,
+                        });
+                   }
+                }
 
                 var createGroupResult = await this._groupStore.AddGroupAsync(dbGroup, cancellationToken);
 
@@ -93,6 +106,29 @@ namespace Chat.Api.Services
                 }
 
                 var result = this._mapper.Map<Group>(getGroupResult.Entity);
+
+                return ApiOperationResult<Group>.FromSuccess(result);
+            }
+            catch (Exception ex)
+            {
+                this._logger.LogError(EventIds.CreateGroupUnexpectedError, ex, ex.Message);
+                return ApiOperationResult<Group>.FromError(new SerializableError { { "UnexpectedError", "UnexpectedError" } });
+            }
+        }
+
+        public async Task<ApiOperationResult<Group>> LeaveGroupAsync(Guid currentUserId, Guid groupId, CancellationToken cancellationToken)
+        {
+            try
+            {
+                var getGroupResult = await this._userGroupStore.DeleteUserGroupAsync(currentUserId, groupId, cancellationToken);
+
+                if (!getGroupResult.IsSuccess)
+                {
+                    var error = new SerializableError { { getGroupResult.Status.ToString(), getGroupResult.ErrorMessage } };
+                    return ApiOperationResult<Group>.FromError(error);
+                }
+
+                var result = this._mapper.Map<Group>(null);
 
                 return ApiOperationResult<Group>.FromSuccess(result);
             }

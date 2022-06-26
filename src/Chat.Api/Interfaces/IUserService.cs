@@ -27,5 +27,7 @@ namespace Chat.Api.Interfaces
         /// <param name="cancellationToken">The cancellation token.</param>
         /// <returns>TokenResponse.</returns>
         Task<ApiOperationResult<TokenResponse>> LoginAsync(LoginUserRequest loginUserRequest, CancellationToken cancellationToken = default);
+
+        Task<ApiOperationResult<List<User>>> GetUsersAsync(Guid currentUserId, CancellationToken cancellationToken = default);
     }
 }

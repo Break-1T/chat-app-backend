@@ -40,5 +40,31 @@ namespace Chat.Db.Stores
                 return DbOperationResult<UserGroup>.FromError("UnexpectedError");
             }
         }
+
+        /// <inheritdoc/>
+        public async Task<DbOperationResult<UserGroup>> DeleteUserGroupAsync(Guid userId, Guid groupId, CancellationToken cancellationToken = default)
+        {
+            var userGroup = new UserGroup { GroupId = groupId, UserId = userId };
+
+            try
+            {
+                this._dbContext.Attach(userGroup);
+                this._dbContext.Remove(userGroup);
+
+                var result = await this._dbContext.SaveChangesAsync(cancellationToken);
+
+                return result == 0
+                    ? DbOperationResult<UserGroup>.FromError("Error")
+                    : DbOperationResult<UserGroup>.FromSuccess(null);
+            }
+            catch (Exception ex)
+            {
+                this._logger.LogError(EventIds.GetUserGroupUnexpectedError, ex,
+                    $"UserGroup not found.\n" +
+                    $"UserId: '{userId}'\n" +
+                    $"GroupId: '{groupId}'");
+                return DbOperationResult<UserGroup>.FromError("UnexpectedError");
+            }
+        }
     }
 }

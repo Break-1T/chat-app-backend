@@ -1,5 +1,8 @@
-﻿using Chat.Api.Interfaces;
+﻿using Chat.Api.Extensions;
+using Chat.Api.Interfaces;
 using Chat.Api.Models.Users;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Net;
 
@@ -68,6 +71,23 @@ namespace Chat.Api.Controllers
             }
 
             return this.Created(this.Request.Path, createUserResult.Entity);
+        }
+
+        [HttpGet("list")]
+        [ProducesResponseType(typeof(List<User>), (int)HttpStatusCode.OK)]
+        [ProducesResponseType(typeof(SerializableError), (int)HttpStatusCode.BadRequest)]
+        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
+        public async Task<IActionResult> GetUsers(CancellationToken cancellationToken = default)
+        {
+            var currentUser = this.User.GetUserId();
+            var getUsersResult = await this._userService.GetUsersAsync(currentUser, cancellationToken);
+
+            if (!getUsersResult.IsSuccess)
+            {
+                return this.BadRequest(getUsersResult.Error);
+            }
+
+            return this.Ok(getUsersResult.Entity);
         }
     }
 }

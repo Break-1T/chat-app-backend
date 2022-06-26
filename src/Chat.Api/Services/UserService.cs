@@ -8,6 +8,7 @@ using Chat.Api.ResultModels;
 using Chat.Db.Models;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
 using System.Text.Json;
 using DbConstants = Chat.Db.Constants.DbConstants;
@@ -132,6 +133,21 @@ namespace Chat.Api.Services
             {
                 this._logger.LogError(EventIds.LoginUnexpectedError, ex, ex.Message);
                 return ApiOperationResult<TokenResponse>.FromError(new SerializableError { { "UnexpectedError", "UnexpectedError" } });
+            }
+        }
+
+        public async Task<ApiOperationResult<List<User>>> GetUsersAsync(Guid currentUserId, CancellationToken cancellationToken = default)
+        {
+            try
+            {
+                var getUsersResult = await this._userManager.Users.Where(u => u.Id != currentUserId).ToListAsync(cancellationToken);
+
+                return ApiOperationResult<List<User>>.FromSuccess(this._mapper.Map<List<User>>(getUsersResult));
+            }
+            catch (Exception ex)
+            {
+                this._logger.LogError(EventIds.SignUpUnexpectedError, ex, ex.Message);
+                return ApiOperationResult<List<User>>.FromError(new SerializableError { { "UnexpectedError", "UnexpectedError" } });
             }
         }
     }

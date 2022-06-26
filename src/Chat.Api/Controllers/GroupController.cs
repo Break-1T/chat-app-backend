@@ -81,5 +81,27 @@ namespace Chat.Api.Controllers
 
             return this.Ok(getListGroupResult.Entity);
         }
+
+        /// <summary>
+        /// Try to leave the group.
+        /// </summary>
+        /// <param name="createGroupRequest">The create group request.</param>
+        /// <param name="cancellationToken">The cancellation token.</param>
+        /// <returns>IActionResult.</returns>
+        [HttpPost("leave/{groupId:guid}")]
+        [ProducesResponseType((int)HttpStatusCode.OK)]
+        [ProducesResponseType(typeof(SerializableError), (int)HttpStatusCode.BadRequest)]
+        public async Task<IActionResult> Leave(Guid groupId, CancellationToken cancellationToken = default)
+        {
+            var currentUserId = this.User.GetUserId();
+            var connectResult = await this._groupService.LeaveGroupAsync(currentUserId, groupId, cancellationToken);
+
+            if (!connectResult.IsSuccess)
+            {
+                return this.BadRequest(connectResult.Error);
+            }
+
+            return this.Ok();
+        }
     }
 }
