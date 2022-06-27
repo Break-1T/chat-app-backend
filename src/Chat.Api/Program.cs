@@ -5,6 +5,7 @@ using Chat.Api.Models;
 using Chat.Db;
 using Chat.Db.Extensions;
 using Chat.Db.Models;
+using Microsoft.AspNet.SignalR;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.IdentityModel.Tokens;
@@ -97,7 +98,13 @@ builder.Services.AddAuthentication("Bearer")
         };
    });
 
-builder.Services.AddSignalR();
+builder.Services
+    .AddSignalR(x=>
+    {
+        x.MaximumReceiveMessageSize = null;
+        x.EnableDetailedErrors = true;
+    })
+    .AddJsonProtocol();
 
 builder.Services.AddControllersWithViews();
 builder.Services.AddControllers();
@@ -153,6 +160,7 @@ app.UseEndpoints(builder =>
     builder.MapDefaultControllerRoute();
     builder.MapControllers();
     builder.MapHub<ChatHub>($"{ApiConstant.SocketPath}/{{groupId}}");
+    GlobalHost.Configuration.MaxIncomingWebSocketMessageSize = null;
 });
 
 app.Run();
